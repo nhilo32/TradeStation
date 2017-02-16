@@ -1,0 +1,37 @@
+
+  CREATE OR REPLACE FORCE VIEW "HED0425"."AA_RESEARCH_VW" ("VCOMPANYID", "VPRICEM", "PERCQTRB", "PERC3B", "PERC2B", "PERC1B", "PERC", "PERC1A", "PERC2A", "PERC3A", "PERCQTRA", "LOW_PERC1A", "LOW_PERC2A", "LOW_PERC3A", "SP", "VTICKER", "VSECTOR", "VINDUSTRY", "VOPTIONABLE", "VMKTCAP") AS 
+  SELECT 
+
+  aa.vcompanyid, 
+  aa.vpricem,
+  round((
+    lag(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)+
+    lag(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)+
+    lag(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)
+    ), 2) AS percqtrb,
+  lag(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc3b,
+  lag(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc2b,
+  lag(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc1b,
+  aa.perc,
+  lead(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc1a,
+  lead(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc2a,
+  lead(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc3a,
+  round((
+  lead(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)+
+  lead(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)+
+  lead(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)
+  ), 2) AS percqtra,
+  lead(aa.low_perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS low_perc1a,
+  lead(aa.low_perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS low_perc2a,
+  lead(aa.low_perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS low_perc3a,
+  '  ' AS sp,
+  ci.vticker,
+  ci.vsector,
+  ci.vindustry,
+  ci.voptionable,
+  ps.vmktcap
+
+FROM aa_mon_price_perc_vert aa
+  JOIN si_psd_tab ps ON aa.vcompanyid = ps.vcompanyid
+  JOIN vw_si_ci_tab_plus ci ON aa.vcompanyid = ci.vcompanyid
+ORDER BY vcompanyid, vpricem;
