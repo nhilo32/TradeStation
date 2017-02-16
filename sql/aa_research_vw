@@ -39,4 +39,3 @@ JOIN si_psd_tab ps ON aa.vcompanyid = ps.vcompanyid
 JOIN vw_si_ci_tab_plus ci ON aa.vcompanyid = ci.vcompanyid
 JOIN aa_psdd_vert dd ON aa.vcompanyid||aa.vcolm = dd.vcompanyid||dd.vcolm
 ORDER BY aa.vcompanyid, aa.vcolm;
-
