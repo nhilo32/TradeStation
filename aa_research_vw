@@ -33,5 +33,5 @@
 
 FROM aa_mon_price_perc_vert aa
   JOIN si_psd_tab ps ON aa.vcompanyid = ps.vcompanyid
-  JOIN vw_si_ci_tab_plus ci ON aa.vcompanyid = ci.vcompanyid
+  JOIN si_ci_tab_plus_vw ci ON aa.vcompanyid = ci.vcompanyid
 ORDER BY vcompanyid, vpricem;
