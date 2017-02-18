@@ -1,5 +1,5 @@
 
-  CREATE OR REPLACE FORCE VIEW "SIPRO"."SI_PSDD_VERT_VW" ("VCOMPANYID", "VCOLDM", "VCOLM", "VPRICEDM") AS 
+  CREATE OR REPLACE FORCE VIEW si_psdd_vert_vw (vcompanyid, vcoldm, vcolm, vpricedm) AS 
   SELECT vcompanyid, vcoldm, vcolm, vpricedm FROM
   (
   SELECT vcompanyid, 'vpricedm001' as vcoldm, 'vpricem001' as vcolm, vpricedm001 AS vpricedm FROM si_psdd_tab UNION
