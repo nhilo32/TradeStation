@@ -1,5 +1,5 @@
 
-  CREATE OR REPLACE FORCE VIEW "SIPRO"."MON_PRICE_PERC_VERT_VW" ("VCOMPANYID", "VPRICEM", "VCOLM", "PERC", "LOW_PERC") AS 
+  CREATE OR REPLACE FORCE VIEW mon_price_perc_vert_vw (vcompanyid, vpricem, vcolm, perc, low_perc) AS 
   SELECT vcompanyid, vpricem, vcolm, perc, low_perc FROM
   (
   SELECT pp.vcompanyid, dc.vpricem001 AS vpricem, 'vpricem001' AS vcolm, pp.vpricem001 AS perc, lp.vpricelm001 AS low_perc FROM mon_price_perc_vw pp JOIN mon_price_perc_low_vw lp ON pp.vcompanyid||'vpricem001' = lp.vcompanyid||'vpricem001' JOIN si_psdc_tab dc ON pp.vcompanyid = dc.vcompanyid UNION
