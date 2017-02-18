@@ -1,0 +1,32 @@
+
+  CREATE OR REPLACE FORCE VIEW "SIPRO"."SI_CI_TAB_PLUS_VW" ("VCOMPANYID", "VCOMPANY", "VTICKER", "VEXCHANGE", "VSTREET", "VCITY", "VSTATE", "VZIP", "VCOUNTRY", "VPHONE", "VWEBADDR", "VBUSINESS", "VANALYSTFN", "VIND2DIG", "VSECTOR", "VIND3DIG", "VINDUSTRY", "VSIC", "VDRPAVAIL", "VSP", "VDOW", "VADR", "VEMPLOYEES", "VOPTIONABLE", "VREPNO", "VLASTMOD") AS 
+  SELECT
+  ci.vcompanyid,
+  ci.vcompany,
+  ci.vticker,
+  ci.vexchange,
+  ci.vstreet,
+  ci.vcity,
+  ci.vstate,
+  ci.vzip,
+  ci.vcountry,
+  ci.vphone,
+  ci.vwebaddr,
+  ci.vbusiness,
+  ci.vanalystfn,
+  ci.vind2dig,
+  mg2.vmgdesc AS vsector,
+  ci.vind3dig,
+  mg3.vmgdesc AS vindustry,
+  ci.vsic,
+  ci.vdrpavail,
+  ci.vsp,
+  ci.vdow,
+  ci.vadr,
+  ci.vemployees,
+  ci.voptionable,
+  ci.vrepno,
+  ci.vlastmod
+FROM si_ci_tab ci
+JOIN si_mgdsc_tab mg2 ON ci.vind2dig = mg2.vmgcode
+JOIN si_mgdsc_tab mg3 ON ci.vind3dig = mg3.vmgcode;
