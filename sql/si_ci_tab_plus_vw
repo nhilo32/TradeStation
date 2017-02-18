@@ -1,5 +1,5 @@
 
-  CREATE OR REPLACE FORCE VIEW "SIPRO"."SI_CI_TAB_PLUS_VW" ("VCOMPANYID", "VCOMPANY", "VTICKER", "VEXCHANGE", "VSTREET", "VCITY", "VSTATE", "VZIP", "VCOUNTRY", "VPHONE", "VWEBADDR", "VBUSINESS", "VANALYSTFN", "VIND2DIG", "VSECTOR", "VIND3DIG", "VINDUSTRY", "VSIC", "VDRPAVAIL", "VSP", "VDOW", "VADR", "VEMPLOYEES", "VOPTIONABLE", "VREPNO", "VLASTMOD") AS 
+  CREATE OR REPLACE FORCE VIEW si_ci_tab_plus_vw (vcompanyid, vcompany, vticker, vexchange, vstreet, vcity, vstate, vzip, vcountry, vphone, vwebaddr, vbusiness, vanalystfn, vind2dig, vsector, vind3dig, vindustry, vsic, vdrpavail, vsp, vdow, vadr, vemployees, voptionable, vrepno, vlastmod) AS 
   SELECT
   ci.vcompanyid,
   ci.vcompany,
