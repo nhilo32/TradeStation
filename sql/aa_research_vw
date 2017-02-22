@@ -1,41 +1,43 @@
 --------------------------------------------------------
--- DDL for View AA_RESEARCH_VW
+--  DDL for View AA_RESEARCH_VW
 --------------------------------------------------------
 
-CREATE OR REPLACE FORCE VIEW aa_research_vw (vcompanyid, vpricem, vcolm, vpricedm, percqtrb, perc3b, perc2b, perc1b, perc, perc1a, perc2a, perc3a, percqtra, low_perc1a, low_perc2a, low_perc3a, sp, vticker, vsector, vindustry, voptionable, vmktcap) AS
-SELECT
-aa.vcompanyid,
-aa.vpricem,
-aa.vcolm,
-dd.vpricedm,
-round((
-lead(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm)+
-lead(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm)+
-lead(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm)
-), 2) AS percqtrb,
-lead(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS perc3b,
-lead(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS perc2b,
-lead(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS perc1b,
-aa.perc,
-lag(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS perc1a,
-lag(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS perc2a,
-lag(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS perc3a,
-round((
-lag(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm)+
-lag(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm)+
-lag(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm)
-), 2) AS percqtra,
-lag(aa.low_perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS low_perc1a,
-lag(aa.low_perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS low_perc2a,
-lag(aa.low_perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vcolm) AS low_perc3a,
-' ' AS sp,
-ci.vticker,
-ci.vsector,
-ci.vindustry,
-ci.voptionable,
-ps.vmktcap
+  CREATE OR REPLACE FORCE VIEW aa_research_vw (vcompanyid, vcolm, vpricem, vpricedm, percqtrb, perc3b, perc2b, perc1b, perc, perc1a, perc2a, perc3a, percqtra, low_perc1a, low_perc2a, low_perc3a, sp, vticker, vsector, vindustry, voptionable, vmktcap, rperc) AS
+  SELECT 
+  aa.vcompanyid, 
+  aa.vcolm,
+  aa.vpricem,
+  dd.vpricedm,
+  round((
+    lag(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)+
+    lag(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)+
+    lag(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)
+    ), 2) AS percqtrb,
+  lag(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc3b,
+  lag(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc2b,
+  lag(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc1b,
+  aa.perc,
+  lead(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc1a,
+  lead(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc2a,
+  lead(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS perc3a,
+  round((
+  lead(aa.perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)+
+  lead(aa.perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)+
+  lead(aa.perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem)
+  ), 2) AS percqtra,
+  lead(aa.low_perc, 1) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS low_perc1a,
+  lead(aa.low_perc, 2) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS low_perc2a,
+  lead(aa.low_perc, 3) OVER(PARTITION BY aa.vcompanyid ORDER BY aa.vpricem) AS low_perc3a,
+  '  ' AS sp,
+  ci.vticker,
+  ci.vsector,
+  ci.vindustry,
+  ci.voptionable,
+  ps.vmktcap,
+  round(aa.perc) as rperc
+
 FROM aa_mon_price_perc_vert aa
-JOIN si_psd_tab ps ON aa.vcompanyid = ps.vcompanyid
-JOIN vw_si_ci_tab_plus ci ON aa.vcompanyid = ci.vcompanyid
-JOIN aa_psdd_vert dd ON aa.vcompanyid||aa.vcolm = dd.vcompanyid||dd.vcolm
+  JOIN si_psd_tab ps ON aa.vcompanyid = ps.vcompanyid
+  JOIN si_ci_tab_plus_vw ci ON aa.vcompanyid = ci.vcompanyid
+  JOIN si_psdd_vert_vw dd ON aa.vcompanyid = dd.vcompanyid AND aa.vcolm = dd.vcolm
 ORDER BY aa.vcompanyid, aa.vcolm;
