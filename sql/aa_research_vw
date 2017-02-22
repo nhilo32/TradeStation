@@ -2,7 +2,7 @@
 -- DDL for View AA_RESEARCH_VW
 --------------------------------------------------------
 
-CREATE OR REPLACE FORCE VIEW "AA_RESEARCH_VW" ("VCOMPANYID", "VPRICEM", "VCOLM", "VPRICEDM", "PERCQTRB", "PERC3B", "PERC2B", "PERC1B", "PERC", "PERC1A", "PERC2A", "PERC3A", "PERCQTRA", "LOW_PERC1A", "LOW_PERC2A", "LOW_PERC3A", "SP", "VTICKER", "VSECTOR", "VINDUSTRY", "VOPTIONABLE", "VMKTCAP") AS
+CREATE OR REPLACE FORCE VIEW aa_research_vw (vcompanyid, vpricem, vcolm, vpricedm, percqtrb, perc3b, perc2b, perc1b, perc, perc1a, perc2a, perc3a, percqtra, low_perc1a, low_perc2a, low_perc3a, sp, vticker, vsector, vindustry, voptionable, vmktcap) AS
 SELECT
 aa.vcompanyid,
 aa.vpricem,
