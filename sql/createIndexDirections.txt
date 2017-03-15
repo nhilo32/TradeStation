@@ -1,0 +1,7 @@
+1. Create tables - run createIndexTables.sql
+2. Create the spy.csv and qqq.csv files
+  a. go to yahoo finance, lookup SPY (and QQQ) and click on "Historicl Data"
+  pick the appropriate time frame and set Frequency to Monthly
+  b. click on "Download Data" and specify a location
+3. Import using the SQL Developer Import tool.
+4. Run the createIndexTables.sql script to finish updating the files.
