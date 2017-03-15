@@ -1,0 +1,79 @@
+--------------------------------------------------------
+--  DDL for Table SI_VAL_EXT
+--------------------------------------------------------
+
+  CREATE TABLE "SI_VAL_EXT" 
+   (	"VCOMPANYID" VARCHAR2(26 BYTE), 
+	"VSPSVAL" NUMBER, 
+	"VEPSVAL" NUMBER, 
+	"VCFPSVAL" NUMBER, 
+	"VFCFPSVAL" NUMBER, 
+	"VDPSVAL" NUMBER, 
+	"VPSPSAVAL" NUMBER, 
+	"VPEAVAL" NUMBER, 
+	"VPCFPSAVAL" NUMBER, 
+	"VPFCPSAVAL" NUMBER, 
+	"VYIELDAVAL" NUMBER, 
+	"VEPSEVAL" NUMBER, 
+	"VPEAEVAL" NUMBER, 
+	"VBPGEPS" NUMBER, 
+	"VBPGSUS" NUMBER, 
+	"VIWEE" NUMBER, 
+	"VIWEPH" NUMBER, 
+	"VIWEPL" NUMBER, 
+	"VIWPBUY" NUMBER, 
+	"VIWPLH" NUMBER, 
+	"VIWTR" NUMBER, 
+	"VIWPAR" NUMBER, 
+	"VR1GRTH" NUMBER, 
+	"VR1PE" NUMBER, 
+	"VR1ECG10E" NUMBER, 
+	"VR1FMKTPR" NUMBER, 
+	"VR1SPRICE" NUMBER, 
+	"VREPNO" VARCHAR2(5 BYTE)
+   ) 
+   ORGANIZATION EXTERNAL 
+    ( TYPE ORACLE_LOADER
+      DEFAULT DIRECTORY "SI_LOGGING"
+      ACCESS PARAMETERS
+      ( RECORDS DELIMITED BY NEWLINE
+    BADFILE SI_VAL
+    LOGFILE SI_VAL
+    DISCARDFILE SI_VAL
+    FIELDS TERMINATED BY "|"
+    missing field VALUES are NULL
+    (
+      vCOMPANYID,
+      vSPSVAL,
+      vEPSVAL,
+      vCFPSVAL,
+      vFCFPSVAL,
+      vDPSVAL,
+      vPSPSAVAL,
+      vPEAVAL,
+      vPCFPSAVAL,
+      vPFCPSAVAL,
+      vYIELDAVAL,
+      vEPSEVAL,
+      vPEAEVAL,
+      vBPGEPS,
+      vBPGSUS,
+      vIWEE,
+      vIWEPH,
+      vIWEPL,
+      vIWPBUY,
+      vIWPLH,
+      vIWTR,
+      vIWPAR,
+      vR1GRTH,
+      vR1PE,
+      vR1ECG10E,
+      vR1FMKTPR,
+      vR1SPRICE,
+      vREPNO
+    )
+      )
+      LOCATION
+       ( "SI_PROCESSED":'si_val.csv'
+       )
+    );

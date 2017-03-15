@@ -1,0 +1,49 @@
+--------------------------------------------------------
+--  DDL for Table INDXMAST_EXT
+--------------------------------------------------------
+
+  CREATE TABLE "INDXMAST_EXT" 
+   (	"VFILE" VARCHAR2(26 BYTE), 
+	"VINDFILE" VARCHAR2(15 BYTE), 
+	"VTAG" VARCHAR2(115 BYTE), 
+	"VEXPRESSION" VARCHAR2(24 BYTE), 
+	"VFOREXPR" VARCHAR2(26 BYTE), 
+	"VDESCRIP" VARCHAR2(25 BYTE), 
+	"VUNIQUE" VARCHAR2(26 BYTE), 
+	"VDESCEND" VARCHAR2(5 BYTE), 
+	"VPRIMARY" VARCHAR2(5 BYTE), 
+	"VAUTOFLD" VARCHAR2(26 BYTE), 
+	"VAUTOEXPR" VARCHAR2(26 BYTE), 
+	"VSELECT" VARCHAR2(26 BYTE), 
+	"VCOLLATE" VARCHAR2(15 BYTE)
+   ) 
+   ORGANIZATION EXTERNAL 
+    ( TYPE ORACLE_LOADER
+      DEFAULT DIRECTORY "SI_LOGGING"
+      ACCESS PARAMETERS
+      ( RECORDS DELIMITED BY NEWLINE
+    BADFILE INDXMAST
+    LOGFILE INDXMAST
+    DISCARDFILE INDXMAST
+    FIELDS TERMINATED BY "|"
+    missing field VALUES are NULL
+    (
+      VFILE,
+      vINDFILE,
+      VTAG,
+      vEXPRESSION,
+      vFOREXPR,
+      vDESCRIP,
+      VUNIQUE,
+      vDESCEND,
+      VPRIMARY,
+      vAUTOFLD,
+      vAUTOEXPR,
+      VSELECT,
+      vCOLLATE
+    )
+      )
+      LOCATION
+       ( "SI_PROCESSED":'indxmast.csv'
+       )
+    );
