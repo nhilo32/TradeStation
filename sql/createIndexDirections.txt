@@ -4,4 +4,4 @@
   pick the appropriate time frame and set Frequency to Monthly
   b. click on "Download Data" and specify a location
 3. Import using the SQL Developer Import tool.
-4. Run the createIndexTables.sql script to finish updating the files.
+4. Run the createIndexTablesUpdate.sql script to finish updating the files.
