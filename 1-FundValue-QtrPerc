@@ -31,7 +31,7 @@ if IsFundDataAvailable( FundField, EndPeriod ) then
         FundValueStart = FundValue( FundField, StartPeriod, oErrorCode ) ;
         FundStartDate = DateToString(FundDate( FundField, StartPeriod, oDateErr )) ;
         FundEndDate = DateToString(FundDate( FundField, EndPeriod, oDateErr )) ;
-        Perc =  ((FundValueStart - FundValueEnd) / FundValueStart) * 100
+        Perc =  ((FundValueEnd - FundValueStart) / FundValueEnd) * 100
         if oErrorCode = fdrOk and oDateErr = fdrOk then 
             begin 
                 if DateLastUpdate < FundEndDate and PlotStyle_0or1 = 1 then 
