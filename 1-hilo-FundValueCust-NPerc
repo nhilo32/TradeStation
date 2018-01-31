@@ -1,0 +1,66 @@
+
+inputs:  
+    FundField( "SBBF" ),		{ name of fundamental field to be plotted 
+    								EBIT - Income Before Tax 
+    								TIAT - Income After Tax
+    								SBBF - Basic EPS Excluding Extraordinary Items*
+    								SBAI - Basic EPS Including Extraordinary Items*
+    								NINC - Net Income
+    								VBES - Basic Normalized EPS
+    								VDES - Diluted Normalized EPS
+    								SCOR - Cost of Revenue, Total
+    								RTLR - Cost of Revenue, Total
+    								RNTS - Net Sales
+    								SGRP - Gross Profit
+    								SREV - Revenue
+    								(SGRP/SREV)*100 = Profit Margin (expressed as a percentage)
+    							}    								
+    PeriodsAgo( 0 ), 			{ number of periods (quarters) ago of fundamental data } 
+    PlotStyle_0or1( 0 ),		{ Set plot style to zero to propogate most recent value until there is a new value ("stair-step" style plot); 
+        							set plot style to 1 to plot only when there is a new value ("connect-the-dots" style) } 
+    PlotZeroLine( true ),		{ plot optional zero line if true;  if false, do not plot a zero line } 
+    ValueToPlotOnError( 0 ),	{ value to plot if an error occurs retrieving fundamental data, fundamental data is not available or not applicable, etc. }
+    PercIn( 10 );				{ Percentage to add or subtract, 10 to add 10%, -10 to substract 10% }
+
+variables:
+    FundFieldValue( 0 ),
+    FundFieldValuePerc( 0 ),
+    oErrorCode( 0 ),
+    FundPostDate( 0 ),
+    oDateErr( 0 ),
+    ApplicationType( 0 ),
+    DateLastUpdate( 0 ),
+    PercToAdd ( 0 ),
+    PercPeriodsAgo( 0 );		{ number of periods plus four, so it is the same quarter a year earlier }
+
+PercToAdd =  PercIn / 100;
+PercPeriodsAgo = PeriodsAgo + 4;
+
+if IsFundDataAvailable( FundField, PeriodsAgo ) then 
+    begin 
+        FundFieldValue = FundValue( FundField, PeriodsAgo, oErrorCode ) ;
+        FundFieldValuePerc = FundValue( FundField, PeriodsAgo, oErrorCode ) ; 
+        FundPostDate = FundDate( FundField, PeriodsAgo, oDateErr ) ; 
+        if oErrorCode = fdrOk and oDateErr = fdrOk then 
+            begin 
+                if DateLastUpdate < FundPostDate and PlotStyle_0or1 = 1 then 
+                    begin DateLastUpdate = FundPostDate ; 
+                        if DateLastUpdate[1] > 0 then 
+                            { there has been at least one NEW release of the fundamental data since the beginning of the chart } 
+                        Plot1( FundFieldValue, "FundValue", green ) ;
+                        Plot2( FundFieldValuePerc + (FundFieldValuePerc * PercToAdd), "FundValPerc", cyan ) ;
+                        Plot3( DateToString(FundPostDate), "Fund Data Date", cyan ) ; 
+                        Print( "FundDate: ", DateToString(FundPostDate), FundFieldValue ) ;
+                            { the line above is where the Perc gets added }
+                    end 
+                else if PlotStyle_0or1 = 0 then 
+                	Plot1( FundFieldValue, "FundValue", green ) ;
+                	Plot2( FundFieldValuePerc + (FundFieldValuePerc * PercToAdd), "FundValPerc", blue ) ;
+                	Plot3( DateToString(FundPostDate), "Fund Data Date", blue ) ;
+                	Print( "FundDate: ", DateToString(FundPostDate), FundFieldValue ) ;
+                    ApplicationType = GetAppInfo( aiApplicationType ) ; 
+                    if PlotZeroLine or ( ApplicationType = cRadarScreen or ApplicationType = cOptionStation ) then Plot4( 0, "Zero Line" ) ; 
+            end 
+        else Plot1( ValueToPlotOnError, "FundValue" ) ;
+        Print( "FundDate: ", DateToString(FundPostDate), FundFieldValue ) ;
+    end ;
