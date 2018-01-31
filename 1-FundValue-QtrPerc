@@ -1,0 +1,57 @@
+inputs:  
+    FundField( "SBBF" ),     
+    EndPeriod( 0 ), 
+ --   PlotStyle_0or1( 0 ), 
+ --   PlotZeroLine( true ), 
+ --   ValueToPlotOnError( 0 ), 
+    PercIn( 10 );
+
+variables:
+    FundValueEnd( 0 ),
+    FundValueStart( 0 ),
+    oErrorCode( 0 ),
+    FundStartDate( 0 ),
+    FundEndDate( 0 ),
+    oDateErr( 0 ),
+    ApplicationType( 0 ),
+    DateLastUpdate( 0 ),
+    PercToAdd( 0 ),
+    StartPeriod( 0 ),
+    Perc( 0 )
+    PlotStyle_0or1( 0 ), 
+    PlotZeroLine( true ), 
+    ValueToPlotOnError( 0 );  
+
+PercToAdd =  PercIn / 100;
+StartPeriod = EndPeriod + 4;
+
+if IsFundDataAvailable( FundField, EndPeriod ) then 
+    begin 
+        FundValueEnd = FundValue( FundField, EndPeriod, oErrorCode ) ;
+        FundValueStart = FundValue( FundField, StartPeriod, oErrorCode ) ;
+        FundStartDate = DateToString(FundDate( FundField, StartPeriod, oDateErr )) ;
+        FundEndDate = DateToString(FundDate( FundField, EndPeriod, oDateErr )) ;
+        Perc =  ((FundValueStart - FundValueEnd) / FundValueStart) * 100
+        if oErrorCode = fdrOk and oDateErr = fdrOk then 
+            begin 
+                if DateLastUpdate < FundEndDate and PlotStyle_0or1 = 1 then 
+                    begin DateLastUpdate = FundEndDate ; 
+                        if DateLastUpdate[1] > 0 then  
+                            Plot1( FundValueEnd, "FundValue", green ) ;
+                            Plot2( FundValueStart, "FundValue", green ) ;
+                            Plot3( Perc, "FundValPerc", cyan ) ;
+                            Plot4( FundStartDate" - "FundEndDate, "Fund Date", cyan ) ; 
+                            Print( "FundDate: ", DateToString(FundEndDate), FundValueEnd ) ;
+                    end 
+                else if PlotStyle_0or1 = 0 then 
+                    Plot1( FundValueEnd, "FundValue", green ) ;
+                    Plot2( FundValueStart, "FundValue", green ) ;
+                    Plot3( Perc, "FundValPerc", cyan ) ;
+                    Plot4( FundStartDate" - "FundEndDate, "Fund Date", cyan ) ;
+                    Print( "FundDate: ", DateToString(FundEndDate), FundValueEnd ) ;
+                    ApplicationType = GetAppInfo( aiApplicationType ) ; 
+                    if PlotZeroLine or ( ApplicationType = cRadarScreen or ApplicationType = cOptionStation ) then Plot4( 0, "Zero Line" ) ; 
+            end 
+        else Plot1( ValueToPlotOnError, "FundValue" ) ;
+        Print( "FundDate: ", DateToString(FundEndDate), FundValueEnd ) ;
+    end ;
