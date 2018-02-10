@@ -1,0 +1,59 @@
+using elsystem;
+inputs: 
+	Price( Close ), 
+	Length( 5 ); 
+	//UpColor( Cyan ), 
+	//DnColor( Red ) ;
+
+variables:
+	PctChg( 0 ),
+	OpenPrice( 0 ),
+	ClosePrice( 0 ),
+	SetBar( 115 ), 
+	OBar1( 0 ),
+	CBar1( 0 ),
+	OBar2( 0 ),
+	CBar2( 0 ),
+	OBar3( 0 ),
+	CBar3( 0 );
+	
+OBar1 = SetBar;
+CBar1 = SetBar + 2;
+OBar2 = SetBar + 3;
+CBar2 = SetBar + 5;
+OBar3 = SetBar + 6;
+CBar3 = SetBar + 8;
+
+If bartype = 4 then
+
+	OpenPrice = Open[OBar3];
+	ClosePrice = Close[CBar3];
+	PctChg =  ((ClosePrice - OpenPrice) / OpenPrice) * 100;
+	//Plot1( OpenPrice, "Open" );
+	Plot2( PctChg, "Qtr %Chg" ) ;
+	//Plot3( ClosePrice, "Close" );
+	Plot4( Bardatetime[OBar3].Format("%b %Y"), "Date", Red );
+	
+	OpenPrice = Open[OBar2];
+	ClosePrice = Close[CBar2];
+	PctChg =  ((ClosePrice - OpenPrice) / OpenPrice) * 100;
+	//Plot5( OpenPrice, "Open" );
+	Plot6( PctChg, "Qtr %Chg" ) ;
+	//Plot7( ClosePrice, "Close" );
+	Plot8( Bardatetime[OBar2].Format("%b %Y"), "Date", Red );
+	
+	OpenPrice = Open[OBar1];
+	ClosePrice = Close[CBar1];
+	PctChg =  ((ClosePrice - OpenPrice) / OpenPrice) * 100;
+	//Plot9( OpenPrice, "Open" );
+	Plot10( PctChg, "Qtr %Chg" ) ;
+	//Plot11( ClosePrice, "Close" );
+	Plot12( Bardatetime[OBar1].Format("%b %Y"), "Date", Red );
+
+{
+{ color criteria }
+if PctChg > 0 then 
+	SetPlotColor( 1, UpColor ) 
+else if PctChg < 0 then 
+	SetPlotColor( 1, DnColor ) ;
+}
