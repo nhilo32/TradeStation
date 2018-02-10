@@ -1,6 +1,6 @@
 inputs:  
     FundField( "SBBF" ),     
-    EndPeriod( 0 ); 
+    PeriodIn( 0 );
     {
     PlotStyle_0or1( 0 ), 
     PlotZeroLine( true ), 
@@ -18,6 +18,8 @@ variables:
     ApplicationType( 0 ),
     DateLastUpdate( 0 ),
     //PercToAdd( 0 ),
+    PeriodNum( 0 ),
+    EndPeriod( 0 ),
     StartPeriod( 0 ),
     Perc( 0 ),
     PlotStyle_0or1( 0 ), 
@@ -25,7 +27,11 @@ variables:
     ValueToPlotOnError( 0 );  
 
 //PercToAdd =  PercIn / 100;
+//EndPeriod = NumOfPeriods( PeriodIn );
+PeriodNum = 12;
+EndPeriod = PeriodIn + PeriodNum;
 StartPeriod = EndPeriod + 4;
+//Print(PeriodNum, EndPeriod, StartPeriod);
 
 if IsFundDataAvailable( FundField, EndPeriod ) then 
     begin 
@@ -34,29 +40,33 @@ if IsFundDataAvailable( FundField, EndPeriod ) then
         FundStartDate = FundDate( FundField, StartPeriod, oDateErr ) ;
         FundEndDate = FundDate( FundField, EndPeriod, oDateErr ) ;
         Perc =  ((FundValueEnd - FundValueStart) / FundValueStart) * 100;
+        
         if oErrorCode = fdrOk and oDateErr = fdrOk then 
             begin 
-                if DateLastUpdate < FundEndDate and PlotStyle_0or1 = 1 then 
-                    begin DateLastUpdate = FundEndDate ; 
-                        if DateLastUpdate[1] > 0 then  
+                //if DateLastUpdate < FundEndDate and PlotStyle_0or1 = 1 then 
+                    begin 
+                    	DateLastUpdate = FundEndDate ; 
+                        //if DateLastUpdate[1] > 0 then  
                             Plot1( FundValueEnd, "FundValue", green ) ;
                             Plot2( FundValueStart, "FundValue", blue ) ;
                             Plot3( Perc, "FundValPerc", cyan ) ;
                             Plot4( FormatDate("MMM yyyy", FundStartDate), "Fund Date", red ) ; 
-                            Print( "FundDate: ", DateToString(FundEndDate), FundValueEnd ) ;
-                    end 
+                            Print( "FundDate: ", DateToString(FundStartDate), FundValueEnd ) ;
+                    end;
+                {
                 else if PlotStyle_0or1 = 0 then 
                     Plot1( FundValueEnd, "FundValue", green ) ;
                     Plot2( FundValueStart, "FundValue", blue ) ;
                     Plot3( Perc, "FundValPerc", cyan ) ;
                     //Plot4( DateToString(FundStartDate), "Fund Date", red ) ;
                     Plot4( FormatDate("MMM yyyy", FundStartDate), "Fund Date", red ) ;
-                    Print( "FundDate: ", DateToString(FundEndDate), FundValueEnd ) ;
+                    Print( "FundDate: ", DateToString(FundStartDate), FundValueEnd ) ;
                     ApplicationType = GetAppInfo( aiApplicationType ) ; 
                     //if PlotZeroLine or ( ApplicationType = cRadarScreen or ApplicationType = cOptionStation ) then Plot5( 0, "Zero Line" ) ; 
+                 }
             end 
         else Plot1( ValueToPlotOnError, "FundValue" ) ;
-        Print( "FundDate: ", DateToString(FundEndDate), FundValueEnd ) ;
+        //Print( "FundDate: ", DateToString(FundEndDate), FundValueEnd ) ;
     end ;
 { name of fundamental field to be plotted 
     EBIT - Income Before Tax 
